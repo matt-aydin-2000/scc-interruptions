@@ -1,0 +1,87 @@
+======================================================================
+GENDERED INTERRUPTION PATTERNS AT THE SUPREME COURT OF CANADA
+Statistical Analysis Report
+======================================================================
+
+1. DESCRIPTIVE STATISTICS
+----------------------------------------
+
+  Male Justices (n=6):
+    Total interruptions made:    883
+    Total interruptions received:688
+    Mean rate made (per 1k words):    2.58
+    Mean rate received (per 1k words):2.39
+    Total words spoken:          337604
+
+  Female Justices (n=4):
+    Total interruptions made:    294
+    Total interruptions received:98
+    Mean rate made (per 1k words):    2.51
+    Mean rate received (per 1k words):1.01
+    Total words spoken:          109798
+
+
+2. STATISTICAL TESTS
+----------------------------------------
+
+  Rate of interruptions made (per 1,000 words spoken):
+    Male mean:   2.577
+    Female mean: 2.508
+    t-statistic: 0.103
+    t p-value:   0.9206
+    Mann-Whitney U: 8.0
+    M-W p-value:    0.4762
+
+  Rate of interruptions received (per 1,000 words spoken):
+    Male mean:   2.389
+    Female mean: 1.015
+    t-statistic: 0.806
+    t p-value:   0.4559
+    Mann-Whitney U: 8.0
+    M-W p-value:    0.4762
+
+  Total count of interruptions made (raw, not rate-adjusted):
+    Male mean:   147.167
+    Female mean: 73.500
+    t-statistic: 1.567
+    t p-value:   0.1568
+
+
+3. EFFECT SIZES (Cohen's d)
+----------------------------------------
+  Interruptions made:     d = 0.057
+  Interruptions received: d = 0.418
+
+
+4. OUTLIER ANALYSIS (z-scores)
+----------------------------------------
+  Moldaver             (M) | z_made=-0.76 | z_recv=-0.43
+  Brown                (M) | z_made=+1.14 | z_recv=-0.20
+  Kasirer              (M) | z_made=-0.71 | z_recv=-0.44
+  Rowe                 (M) | z_made=-0.80 | z_recv=-0.39
+  Wagner               (M) | z_made=+2.24 | z_recv=+2.98 [OUTLIER: made] [OUTLIER: received]
+  Karakatsanis         (F) | z_made=+0.83 | z_recv=-0.24
+  Martin               (F) | z_made=-0.34 | z_recv=-0.42
+  Abella               (F) | z_made=-0.13 | z_recv=-0.29
+  Jamal                (M) | z_made=-0.95 | z_recv=-0.43
+  Côté                 (F) | z_made=-0.51 | z_recv=-0.14
+
+
+5. REGRESSION ANALYSIS
+----------------------------------------
+
+  Neg. binomial: interruptions_made ~ gender + log(words) + is_chief:
+    Gender coefficient: 0.14947821467034206
+    Gender p-value:     0.18951733362150458
+    Significant (p<.05): False
+    AIC: 2474.507270190106
+    N observations: 826
+
+  Neg. binomial: interruptions_received ~ gender + log(words) + is_chief:
+    Gender coefficient: -0.004696713073192499
+    Gender p-value:     0.9749252722763424
+    Significant (p<.05): False
+    AIC: 1782.0215251865616
+    N observations: 826
+
+======================================================================
