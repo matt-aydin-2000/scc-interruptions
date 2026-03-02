@@ -37,32 +37,71 @@ scc_interruptions/
 └── output/                  # Analysis results, CSVs, and charts
 ```
 
-## Setup
+## How to Run This (Step by Step)
 
-Requires Python 3.10+.
+You need Python installed. If you're on a Mac, you probably already have it. If you're on Windows, download it from [python.org](https://www.python.org/downloads/) and check "Add to PATH" during install.
 
-```bash
-cd scc_interruptions
+### 1. Download the code
+
+Click the green **Code** button on this page, then **Download ZIP**. Unzip it somewhere on your computer (e.g. your Desktop).
+
+Or if you have git installed:
+```
+git clone https://github.com/matt-aydin-2000/scc-interruptions.git
+```
+
+### 2. Open a terminal
+
+- **Mac**: Open the Terminal app (search for "Terminal" in Spotlight)
+- **Windows**: Open Command Prompt (search for "cmd" in the Start menu)
+
+### 3. Navigate to the project folder
+
+Type `cd` followed by the path to wherever you put the folder. For example:
+```
+cd ~/Desktop/scc-interruptions
+```
+If there are spaces in the path, wrap it in quotes:
+```
+cd "/Users/yourname/Desktop/scc-interruptions"
+```
+
+### 4. Set up a virtual environment and install dependencies
+
+**Mac:**
+```
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Usage
-
-```bash
-# Run full pipeline (downloads transcripts first)
-python3 main.py
-
-# Run on cached data (skip downloading)
-python3 main.py --skip-scrape
-
-# Quick test with 5 cases
-python3 main.py --pilot 5
-
-# Change timing threshold to 10 seconds
-python3 main.py --threshold 10
+**Windows:**
 ```
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+You'll know it worked when you see `(venv)` at the start of your terminal prompt.
+
+### 5. Run it
+
+```
+python3 main.py
+```
+
+This downloads all 121 transcripts from obiter.ai (takes a couple minutes the first time), detects interruptions, runs the statistical analysis, and generates charts. Everything gets saved to the `output/` folder.
+
+If you've already run it once and don't want to re-download the transcripts:
+```
+python3 main.py --skip-scrape
+```
+
+### If something goes wrong
+
+- **"command not found: python3"** — try `python` instead of `python3`
+- **"No module named ..."** — make sure you ran `pip install -r requirements.txt` and that `(venv)` is showing in your terminal
+- **"externally-managed-environment"** — you forgot the virtual environment step. Go back to step 4
 
 ## Output
 
