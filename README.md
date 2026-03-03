@@ -1,10 +1,10 @@
 # SCC Gendered Interruptions Analysis
 
-A Python pipeline for measuring gendered interruption patterns during Supreme Court of Canada oral hearings. Built for Professor Rehaag's Legal Tech course (Winter 2026).
+We created a Python pipeline for measuring gendered interruption patterns during Supreme Court of Canada oral hearings. It is built for Professor Rehaag's Legal Tech course at Osgoode Hall Law School.
 
 ## Research Question
 
-Can AI-generated transcripts be used to measure whether female judges are interrupted more frequently than male judges at the SCC — and whether male and female judges interrupt speakers at different rates?
+Can AI-generated transcripts be used to measure whether female judges are interrupted more frequently than male judges at the SCC, and whether male and female judges interrupt speakers at different rates?
 
 ## Data
 
@@ -14,9 +14,9 @@ We use Simon Wallace's AI-generated transcripts of 121 SCC hearings (January 202
 
 Interruptions are detected using three methods adapted from the US literature (Jacobi & Schweers 2017, Feldman & Gill 2019):
 
-- **Overlap detection** — the diarization model flagged overlapping speech
-- **Timing-based** — a new speaker starts within 15 seconds and the previous speaker's text appears cut off
-- **Rapid judicial intervention** — a justice speaks before counsel has said more than 50 words
+- **Overlap detection** -- the diarization model flagged overlapping speech
+- **Timing-based** -- a new speaker starts within 15 seconds and the previous speaker's text appears cut off
+- **Rapid judicial intervention** -- a justice speaks before counsel has said more than 50 words
 
 Statistical analysis includes descriptive statistics, Welch's t-tests, Mann-Whitney U tests, negative binomial regression (with volubility controls), Cohen's d effect sizes, and z-score outlier detection.
 
@@ -37,7 +37,9 @@ scc_interruptions/
 └── output/                  # Analysis results, CSVs, and charts
 ```
 
-## How to Run This (Step by Step)
+## How to Run This
+
+This is an extremely basic step-by-step method; any law student can follow this.
 
 You need Python installed. If you're on a Mac, you probably already have it. If you're on Windows, download it from [python.org](https://www.python.org/downloads/) and check "Add to PATH" during install.
 
@@ -99,23 +101,23 @@ python3 main.py --skip-scrape
 
 ### If something goes wrong
 
-- **"command not found: python3"** — try `python` instead of `python3`
-- **"No module named ..."** — make sure you ran `pip install -r requirements.txt` and that `(venv)` is showing in your terminal
-- **"externally-managed-environment"** — you forgot the virtual environment step. Go back to step 4
+- **"command not found: python3"** -- try `python` instead of `python3`
+- **"No module named ..."** -- make sure you ran `pip install -r requirements.txt` and that `(venv)` is showing in your terminal
+- **"externally-managed-environment"** -- you forgot the virtual environment step. Go back to step 4
 
 ## Output
 
 Results are saved to the `output/` folder:
 
-- `analysis_report.txt` — full statistical report
-- `justice_metrics.csv` — per-justice aggregated data
-- `case_level_metrics.csv` — per-justice-per-case data (for regression)
-- `time_to_first_interruption.csv` — how quickly justices interrupt counsel
+- `analysis_report.txt` -- full statistical report
+- `justice_metrics.csv` -- per-justice aggregated data
+- `case_level_metrics.csv` -- per-justice-per-case data (for regression)
+- `time_to_first_interruption.csv` -- how quickly justices interrupt counsel
 - Six PNG visualizations (gender comparison, justice breakdown, heatmap, etc.)
 
 ## Authors
 
-Sabrin Saide, Matt Aydin, Gobind Dhugee
+Matt Aydin, Sabrin Saide, Gobind Dhugee
 
 ## References
 
