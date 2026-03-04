@@ -36,6 +36,8 @@ from analysis import (
     format_results_report,
 )
 from visualizations import generate_all_visualizations
+from covid_analysis import add_hearing_mode_to_case_df, covid_summary
+from validation import save_validation_materials
 
 
 # Directories -- everything is relative to wherever this script lives
@@ -196,6 +198,29 @@ def run_pipeline(max_cases=None, skip_scrape=False, time_threshold=15, delay=1.0
         print(f"Saved TTFI data: {ttfi_path}")
 
     # =============================================
+    # STEP 7: COVID-19 Hearing Mode Analysis
+    # =============================================
+    print("\n--- STEP 7: COVID-19 Hearing Mode Analysis ---")
+    covid_report, case_df_with_mode = covid_summary(case_df)
+    print(covid_report)
+
+    covid_report_path = os.path.join(OUTPUT_DIR, "covid_analysis_report.txt")
+    with open(covid_report_path, "w") as f:
+        f.write(covid_report)
+    print(f"Saved COVID analysis report: {covid_report_path}")
+
+    # Save updated case-level CSV with hearing mode column
+    case_df_with_mode.to_csv(os.path.join(OUTPUT_DIR, "case_level_metrics.csv"), index=False)
+
+    # =============================================
+    # STEP 8: Validation Sample (Manual Review)
+    # =============================================
+    print("\n--- STEP 8: Generating Validation Sample ---")
+    val_report, precision_items, recall_items = save_validation_materials(
+        cases, all_interruptions, OUTPUT_DIR, sample_size=30
+    )
+
+    # =============================================
     # Done!
     # =============================================
     print("\n" + "=" * 70)
@@ -205,6 +230,9 @@ def run_pipeline(max_cases=None, skip_scrape=False, time_threshold=15, delay=1.0
     print(f"Interruptions found: {len(all_interruptions)}")
     print(f"Charts generated: {len(fig_paths)}")
     print(f"All output saved to: {OUTPUT_DIR}")
+    print("")
+    print("NOTE: LLM validation is available separately. Run:")
+    print("  python llm_validator.py --api-key YOUR_KEY --sample 50")
     print("=" * 70)
 
     return {
@@ -212,8 +240,10 @@ def run_pipeline(max_cases=None, skip_scrape=False, time_threshold=15, delay=1.0
         "interruptions": len(all_interruptions),
         "justice_df": justice_df,
         "case_df": case_df,
+        "case_df_with_mode": case_df_with_mode,
         "results": results,
         "report": report,
+        "covid_report": covid_report,
         "fig_paths": fig_paths,
     }
 
