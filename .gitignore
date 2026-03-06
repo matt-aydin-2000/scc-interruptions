@@ -9,5 +9,8 @@ __pycache__/
 # Virtual environment
 venv/
 
+# Output files (papers, presentations, reports, charts)
+output/
+
 # Mac system files
 .DS_Store
