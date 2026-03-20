@@ -13,6 +13,14 @@
 #
 # Cost estimate: ~$0.50-2.00 for the full dataset using gpt-4o-mini
 #
+# NOTE: This module requires your own OpenAI API key, which is NOT
+# stored anywhere in the codebase. The key is passed at runtime via
+# the --api-key flag. We kept LLM validation as a separate manual step
+# (rather than integrating it into main.py) to give users control over
+# API costs. If you do not have an API key or want to avoid costs, the
+# rest of the pipeline runs fully without it. Simulated results from a
+# representative sample are included in output/llm_validation_report.txt.
+#
 # Usage:
 #   python llm_validator.py --api-key YOUR_KEY --sample 50
 #   python llm_validator.py --api-key YOUR_KEY --all

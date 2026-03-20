@@ -29,8 +29,11 @@ scc_interruptions/
 ├── transcript_parser.py     # Parses HTML into structured speaker turns
 ├── interruption_detector.py # Three-method interruption detection
 ├── judge_metadata.py        # Justice names, genders, roles
-├── analysis.py              # Statistical tests and regression
+├── analysis.py              # Statistical tests, regression, and word-count analysis
 ├── visualizations.py        # Charts and figures
+├── covid_analysis.py        # COVID-era hearing mode classification and comparison
+├── validation.py            # Manual validation sample generation (precision/recall)
+├── llm_validator.py         # Optional LLM-based interruption validation (GPT-4o-mini)
 ├── requirements.txt         # Python dependencies
 ├── data/
 │   └── raw/                 # Scraped transcript JSON files (not in repo)
@@ -113,7 +116,7 @@ Results are saved to the `output/` folder:
 - `justice_metrics.csv` -- per-justice aggregated data
 - `case_level_metrics.csv` -- per-justice-per-case data (for regression)
 - `time_to_first_interruption.csv` -- how quickly justices interrupt counsel
-- Six PNG visualizations (gender comparison, justice breakdown, heatmap, etc.)
+- PNG visualizations (gender comparison, justice breakdown, heatmap, word-count dynamics, etc.)
 
 ## Authors
 

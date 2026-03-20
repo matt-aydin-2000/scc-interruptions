@@ -307,6 +307,86 @@ def compute_effect_size(male_values, female_values):
     return (male_values.mean() - female_values.mean()) / pooled_std
 
 
+def gendered_word_count_analysis(justice_df, case_df):
+    """
+    Investigate whether male and female justices differ in how much they speak,
+    and whether the choice to normalize interruptions per 1,000 words affects
+    the main gender finding. Returns a dict with all test results.
+    """
+    male_j = justice_df[justice_df["gender"] == "M"]
+    female_j = justice_df[justice_df["gender"] == "F"]
+
+    results = {
+        "male_n": len(male_j),
+        "female_n": len(female_j),
+        "male_mean_total_words": male_j["total_words_spoken"].mean(),
+        "female_mean_total_words": female_j["total_words_spoken"].mean(),
+        "male_mean_words_per_turn": male_j["avg_words_per_turn"].mean(),
+        "female_mean_words_per_turn": female_j["avg_words_per_turn"].mean(),
+        "male_mean_cases_heard": male_j["cases_heard"].mean(),
+        "female_mean_cases_heard": female_j["cases_heard"].mean(),
+    }
+
+    # T-test on words per turn (justice-level)
+    t_stat, t_p = stats.ttest_ind(
+        male_j["avg_words_per_turn"], female_j["avg_words_per_turn"], equal_var=False
+    )
+    results["wpt_t_stat"] = t_stat
+    results["wpt_t_p"] = t_p
+
+    # Per-case level: words spoken per justice per case
+    male_case = case_df[case_df["gender"] == "M"]["words_spoken"]
+    female_case = case_df[case_df["gender"] == "F"]["words_spoken"]
+    t2, p2 = stats.ttest_ind(male_case, female_case, equal_var=False)
+    mw_u, mw_p = stats.mannwhitneyu(male_case, female_case, alternative="two-sided")
+    results["case_male_mean_words"] = male_case.mean()
+    results["case_female_mean_words"] = female_case.mean()
+    results["case_t_stat"] = t2
+    results["case_t_p"] = p2
+    results["case_mw_u"] = mw_u
+    results["case_mw_p"] = mw_p
+
+    # Raw (unnormalized) interruption counts
+    results["male_raw_made"] = male_j["interruptions_made"].mean()
+    results["female_raw_made"] = female_j["interruptions_made"].mean()
+    results["male_raw_received"] = male_j["interruptions_received"].mean()
+    results["female_raw_received"] = female_j["interruptions_received"].mean()
+
+    # Normalized rates for comparison
+    results["male_norm_made"] = male_j["rate_made_per_1k_words"].mean()
+    results["female_norm_made"] = female_j["rate_made_per_1k_words"].mean()
+    results["male_norm_received"] = male_j["rate_received_per_1k_words"].mean()
+    results["female_norm_received"] = female_j["rate_received_per_1k_words"].mean()
+
+    return results
+
+
+def format_word_count_report(wc):
+    """Format gendered word-count analysis results as a readable report."""
+    lines = []
+    lines.append("=== Words Spoken by Gender (Justice-Level Aggregates) ===\n")
+    lines.append(f"Male justices (n={wc['male_n']}):")
+    lines.append(f"  Mean total words spoken:    {wc['male_mean_total_words']:,.0f}")
+    lines.append(f"  Mean words per turn:        {wc['male_mean_words_per_turn']:.1f}")
+    lines.append(f"  Mean cases heard:           {wc['male_mean_cases_heard']:.1f}")
+    lines.append(f"\nFemale justices (n={wc['female_n']}):")
+    lines.append(f"  Mean total words spoken:    {wc['female_mean_total_words']:,.0f}")
+    lines.append(f"  Mean words per turn:        {wc['female_mean_words_per_turn']:.1f}")
+    lines.append(f"  Mean cases heard:           {wc['female_mean_cases_heard']:.1f}")
+    lines.append(f"\nWelch's t-test (words per turn): t={wc['wpt_t_stat']:.3f}, p={wc['wpt_t_p']:.4f}")
+    lines.append(f"\n=== Per-Case Words Spoken ===")
+    lines.append(f"Male mean:   {wc['case_male_mean_words']:.1f} words/case")
+    lines.append(f"Female mean: {wc['case_female_mean_words']:.1f} words/case")
+    lines.append(f"Welch's t-test: t={wc['case_t_stat']:.3f}, p={wc['case_t_p']:.4f}")
+    lines.append(f"Mann-Whitney U: U={wc['case_mw_u']:.0f}, p={wc['case_mw_p']:.4f}")
+    lines.append(f"\n=== Raw (Unnormalized) Interruption Counts ===")
+    lines.append(f"Male mean interruptions made:      {wc['male_raw_made']:.1f}")
+    lines.append(f"Female mean interruptions made:    {wc['female_raw_made']:.1f}")
+    lines.append(f"Male mean interruptions received:  {wc['male_raw_received']:.1f}")
+    lines.append(f"Female mean interruptions received:{wc['female_raw_received']:.1f}")
+    return "\n".join(lines)
+
+
 def full_analysis(justice_df, case_df=None):
     """Run the whole analysis pipeline and collect all results."""
     results = {}

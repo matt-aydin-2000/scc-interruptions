@@ -12,5 +12,10 @@ venv/
 # Output files (papers, presentations, reports, charts)
 output/
 
+# Node artifacts
+node_modules/
+package.json
+package-lock.json
+
 # Mac system files
 .DS_Store

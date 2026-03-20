@@ -312,6 +312,53 @@ def plot_interruption_heatmap(interruptions, output_dir):
     return path
 
 
+def plot_gendered_word_count(justice_df, output_dir):
+    """
+    Two-panel figure comparing gendered word-count dynamics:
+    Left: average words per turn by gender.
+    Right: normalized vs raw interruption counts side-by-side.
+    """
+    setup_style()
+    male_j = justice_df[justice_df["gender"] == "M"]
+    female_j = justice_df[justice_df["gender"] == "F"]
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Left panel: words per turn by gender
+    genders = ["Male", "Female"]
+    wpt = [male_j["avg_words_per_turn"].mean(), female_j["avg_words_per_turn"].mean()]
+    colors = [COLORS["M"], COLORS["F"]]
+    axes[0].bar(genders, wpt, color=colors, edgecolor="black", linewidth=0.5)
+    axes[0].set_ylabel("Mean Words per Turn")
+    axes[0].set_title("Average Words per Turn by Gender")
+    for i, v in enumerate(wpt):
+        axes[0].text(i, v + 0.5, f"{v:.1f}", ha="center", fontsize=11)
+
+    # Right panel: normalized vs raw comparison
+    metrics = ["Made\n(per 1k words)", "Made\n(raw count)",
+               "Received\n(per 1k words)", "Received\n(raw count)"]
+    male_vals = [male_j["rate_made_per_1k_words"].mean(), male_j["interruptions_made"].mean(),
+                 male_j["rate_received_per_1k_words"].mean(), male_j["interruptions_received"].mean()]
+    female_vals = [female_j["rate_made_per_1k_words"].mean(), female_j["interruptions_made"].mean(),
+                   female_j["rate_received_per_1k_words"].mean(), female_j["interruptions_received"].mean()]
+
+    x = np.arange(len(metrics))
+    w = 0.35
+    axes[1].bar(x - w/2, male_vals, w, label="Male", color=COLORS["M"], edgecolor="black", linewidth=0.5)
+    axes[1].bar(x + w/2, female_vals, w, label="Female", color=COLORS["F"], edgecolor="black", linewidth=0.5)
+    axes[1].set_xticks(x)
+    axes[1].set_xticklabels(metrics, fontsize=9)
+    axes[1].set_title("Normalized vs Raw Interruption Counts")
+    axes[1].legend()
+
+    plt.tight_layout()
+    path = os.path.join(output_dir, "gendered_word_count_analysis.png")
+    plt.savefig(path)
+    plt.close()
+    print(f"  Saved: {path}")
+    return path
+
+
 def generate_all_visualizations(justice_df, interruptions, ttfi_data, output_dir):
     """Make all the charts and save them to the output folder."""
     os.makedirs(output_dir, exist_ok=True)
